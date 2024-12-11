@@ -25,6 +25,8 @@ name, email, password, confirmpassword} = req.body
 if(!name) {
 return res.status(422).json({msg: " o nome é obrigatório"})
 }
+
+
 })
 
 
