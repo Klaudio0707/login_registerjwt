@@ -19,6 +19,7 @@ res.status(200).json({msg: "bem vindo a nossa api!!"})
 
 //Register User
 app.post('/auth/register', async (req, res) => {
+    
 const {
 name, email, password, confirmpassword} = req.body
 //validações
