@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 app.post('/auth/register', async (req, res) => {
 
     const {
-        name, email, password, confirmpassword } = req.body
+        name, email, password, confirmPassword } = req.body
     //validações
     if (!name) {
         return res.status(422).json({ msg: " o nome é obrigatório" })
@@ -35,9 +35,38 @@ app.post('/auth/register', async (req, res) => {
     if (!password) {
         return res.status(422).json({ msg: " o senha é obrigatório" })
     }
-    return res.status(422).json({ msg: " Cadastrado" })
+    if (password !== confirmPassword) {
+        return res.status(422).json({ msg: " As senhas não conferem!!" })
+    }
+
+const userExists = await User.findOne({email: email})
+
+if (userExists) {
+return res.status(422).json({msg: 'por favor, utilize outro email'})
+}
+
+//create password
+const salt = await bcrypt.genSalt(12)
+const passwordHash = await bcrypt.hash(password, salt)
+
+//create user
+const user = new User({
+name,
+email,
+password: passwordHash,
+})
+try {
+await user.save()
+res.status(201).json({msg: 'usuario criado com sucesso!!'})
+
+} catch(error) {
+res.status(500).json({msg: 'Aconteceu um erro no Servidor, Tente mais tarde!!'})
+
+}
 
 })
+
+
 
 
 
